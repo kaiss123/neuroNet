@@ -1,0 +1,25 @@
+
+.row {
+  width: 100%;
+  display: flex;
+}
+.col {
+  width: 10px;
+ }
+.cell {
+  background-color: darkgrey;
+  height: 10px;
+  border: black 1px solid;
+}
+.snake {
+
+  background-color: red !important;
+}
+.empty {
+
+  background-color: darkgrey !important;
+}
+.apple {
+
+  background-color: green !important;
+}

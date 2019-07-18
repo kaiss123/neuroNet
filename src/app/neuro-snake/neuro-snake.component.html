@@ -1,0 +1,7 @@
+<div [ngStyle]="{width: _ROWS * 10 + 'px'}">
+
+    <div *ngFor="let row of gameFieldMatrix" class="row cell">
+      <div *ngFor="let col of row" class="col cell" [ngClass]="{'snake': col.value === 1, 'empty': col.value === 0, 'apple': col.value === 2}">
+      </div>
+    </div>
+</div>

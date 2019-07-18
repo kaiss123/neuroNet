@@ -2,12 +2,14 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 
 import { AppComponent } from './app.component';
-import { UiComponent } from './ui/ui.component';
+import { NeuroSnakeComponent } from './neuro-snake/neuro-snake.component';
+import { SnakeComponent } from './snake/snake.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    UiComponent
+    NeuroSnakeComponent,
+    SnakeComponent
   ],
   imports: [
     BrowserModule
