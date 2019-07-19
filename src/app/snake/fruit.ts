@@ -26,6 +26,7 @@ export class Fruit {
     this.x = x;
     this.y = y;
   }
+
   randomNumber(): any {
     return Math.floor(Math.random() * BOARD_SIZE);
   }

@@ -1,6 +1,8 @@
 import * as tf from '@tensorflow/tfjs';
 import * as tfvis from '@tensorflow/tfjs-vis';
 
+// http://www.curiousinspiration.com/posts/tensors,-the-building-block-for-deep-learning
+
 export class NeuroNet {
 
   private tensorflow = tf;
@@ -24,7 +26,7 @@ export class NeuroNet {
 
   public initBrain() {
     const model = this.tensorflow.sequential();
-    model.add(this.tensorflow.layers.dense({inputShape: [8], units: 1, useBias: true}));
+    model.add(this.tensorflow.layers.dense({inputShape: [2,1], units: 1, useBias: true}));
     model.add(tf.layers.dense({units: 24, activation: 'sigmoid'}));
     model.add(tf.layers.dense({units: 24, activation: 'sigmoid'}));
     model.add(this.tensorflow.layers.dense({units: 4, useBias: true}));
@@ -36,6 +38,8 @@ export class NeuroNet {
       metrics: ['accuracy'],
     });
     debugger;
+    model.predict(tf.tensor2d([2,1],[2,1]));
+    console.log(model);
     return model;
   }
 

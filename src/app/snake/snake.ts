@@ -10,6 +10,7 @@ export class Snake extends NeuroNet{
   public lifeTime = 0;
   public lifeLeft = 200;
   public fitness = 0;
+  public vision;
 
   direction = CONTROLS.LEFT;
   parts = [];
@@ -125,5 +126,28 @@ export class Snake extends NeuroNet{
     }
   }
 
+  look() {
+    this.vision = [];
+    var tmp = this.lookInDirection({x: -BOARD_SIZE, y: 0});
+    tmp = this.lookInDirection({x: -BOARD_SIZE, y: -BOARD_SIZE});
+    tmp = this.lookInDirection({x: 0, y: -BOARD_SIZE});
+    tmp = this.lookInDirection({x: BOARD_SIZE, y: -BOARD_SIZE});
+    tmp = this.lookInDirection({x: BOARD_SIZE, y: 0});
+    tmp = this.lookInDirection({x: BOARD_SIZE, y: BOARD_SIZE});
+    tmp = this.lookInDirection({x: 0, y: BOARD_SIZE});
+    tmp = this.lookInDirection({x: -BOARD_SIZE, y: BOARD_SIZE});
+  }
 
+  lookInDirection(directionVector) {
+    var head = this.parts[0];
+
+    var foodCollision: boolean = false;
+    var bodyCollision: boolean = false;
+    var wallCollision: boolean = false;
+    var pos = head;
+
+    while(this.boardCollision(head)) {
+
+    }
+  }
 }

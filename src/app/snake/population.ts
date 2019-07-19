@@ -11,7 +11,7 @@ export class Population {
   snakeBest: Snake;
   generation: number = 0;
 
-  constructor(size: number = 1) {
+  constructor(size: number = 10) {
 
     this.snakes;
     for(let i = 0; i <= size; i++) {
