@@ -2,6 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {BOARD_SIZE, COLORS, CONTROLS, GAME_MODES} from "./constants";
 import {Snake} from "./snake";
 import {Population} from "./population";
+import {interval} from "rxjs";
 
 @Component({
   selector: 'app-snake',
@@ -21,35 +22,40 @@ export class SnakeComponent {
   public showMenuChecker = false;
   public gameStarted = false;
   public newBestScore = false;
-  private snake: Snake; // snake for replay
+  public snake: Snake; // snake for replay
+  private interval: number = 50;
 
   public popuplation: Population;
 
   constructor() {
-    this.popuplation = new Population();
-    this.snake = this.popuplation.snakeBest;
+    this.popuplation = new Population(2, this.interval);
+    this.start();
+  }
+
+  async start() {
+    this.popuplation.start();
   }
 
   handleKeyboardEvents(e: KeyboardEvent) {
-    if (e.keyCode === CONTROLS.LEFT && this.snake.direction !== CONTROLS.RIGHT) {
-      this.snake.tempDirection = CONTROLS.LEFT;
-    } else if (e.keyCode === CONTROLS.UP && this.snake.direction !== CONTROLS.DOWN) {
-      this.snake.tempDirection = CONTROLS.UP;
-    } else if (e.keyCode === CONTROLS.RIGHT && this.snake.direction !== CONTROLS.LEFT) {
-      this.snake.tempDirection = CONTROLS.RIGHT;
-    } else if (e.keyCode === CONTROLS.DOWN && this.snake.direction !== CONTROLS.UP) {
-      this.snake.tempDirection = CONTROLS.DOWN;
-    }
+    // if (e.keyCode === CONTROLS.LEFT && this.snake.direction !== CONTROLS.RIGHT) {
+    //   this.snake.tempDirection = CONTROLS.LEFT;
+    // } else if (e.keyCode === CONTROLS.UP && this.snake.direction !== CONTROLS.DOWN) {
+    //   this.snake.tempDirection = CONTROLS.UP;
+    // } else if (e.keyCode === CONTROLS.RIGHT && this.snake.direction !== CONTROLS.LEFT) {
+    //   this.snake.tempDirection = CONTROLS.RIGHT;
+    // } else if (e.keyCode === CONTROLS.DOWN && this.snake.direction !== CONTROLS.UP) {
+    //   this.snake.tempDirection = CONTROLS.DOWN;
+    // }
   }
 
   setColors(col: number, row: number): string {
     if (this.isGameOver) {
       return COLORS.GAME_OVER;
-    } else if (this.snake.fruit.x === row && this.snake.fruit.y === col) {
+    } else if (this.popuplation.snakeBest.fruit.x === row && this.popuplation.snakeBest.fruit.y === col) {
       return COLORS.FRUIT;
-    } else if (this.snake.parts[0].x === row && this.snake.parts[0].y === col) {
+    } else if (this.popuplation.snakeBest.parts[0].x === row && this.popuplation.snakeBest.parts[0].y === col) {
       return COLORS.HEAD;
-    } else if (this.snake.board[col][row] === true) {
+    } else if (this.popuplation.snakeBest.board[col][row] === true) {
       return COLORS.BODY;
     }
     return COLORS.BOARD;
@@ -88,7 +94,8 @@ export class SnakeComponent {
   // }
 
   showMenu(): void {
-    this.showMenuChecker = !this.showMenuChecker;
+    //this.showMenuChecker = !this.showMenuChecker;
+    this.popuplation.stop = true;
   }
 
   newGame(mode: string): void {

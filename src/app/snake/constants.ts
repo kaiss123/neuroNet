@@ -1,4 +1,4 @@
-export const BOARD_SIZE = 18;
+export const BOARD_SIZE = 24;
 
 export const CONTROLS = {
   LEFT: 37,
@@ -6,7 +6,12 @@ export const CONTROLS = {
   RIGHT: 39,
   DOWN: 40
 };
-
+export const CONTROLSAI = {
+  LEFT: 2,
+  UP: 0,
+  RIGHT: 3,
+  DOWN: 1
+};
 export const COLORS = {
   GAME_OVER: '#D24D57',
   FRUIT: '#EC644B',

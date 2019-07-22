@@ -7,43 +7,50 @@ export class NeuroNet {
 
   private tensorflow = tf;
   private tensorflowVis = tfvis;
-  IMAGE_WIDTH = 28;
-  IMAGE_HEIGHT = 28;
-  IMAGE_CHANNELS = 1;
 
-  private mind;
+  public mind;
 
-  constructor () {
-    console.log('creating brain', new Date());
-    this.mind = this.initBrain();
-    this.mind.weights.forEach(w => {
-      console.log(w.name, w.shape);
-    });
-    const a = tf.tensor([[1, 2], [3, 4]]);
-    console.log('a shape:', a.shape);
-    a.print();
+  constructor (generatedMind) {
+    if(generatedMind) {
+      this.mind = generatedMind;
+    }else {
+      this.mind = this.initBrain();
+    }
+
+    // this.mind.weights.forEach(w => {
+    //   console.log(w.name, w.shape);
+    // });
   }
 
   public initBrain() {
     const model = this.tensorflow.sequential();
-    model.add(this.tensorflow.layers.dense({inputShape: [2,1], units: 1, useBias: true}));
-    model.add(tf.layers.dense({units: 24, activation: 'sigmoid'}));
-    model.add(tf.layers.dense({units: 24, activation: 'sigmoid'}));
-    model.add(this.tensorflow.layers.dense({units: 4, useBias: true}));
+    model.add(this.tensorflow.layers.dense({inputShape: [24], units: 1}));
+    model.add(this.tensorflow.layers.dense({units: 24, activation: 'sigmoid'}));
+    model.add(this.tensorflow.layers.dense({units: 24, activation: 'sigmoid'}));
+    model.add(this.tensorflow.layers.dense({units: 4}));
 
-    const optimizer = tf.train.adam();
-    model.compile({
-      optimizer: optimizer,
-      loss: tf.losses.meanSquaredError,
-      metrics: ['accuracy'],
-    });
-    debugger;
-    model.predict(tf.tensor2d([2,1],[2,1]));
-    console.log(model);
+    // const optimizer = tf.train.adam();
+    // model.compile({
+    //   optimizer: optimizer,
+    //   loss: tf.losses.meanSquaredError,
+    //   metrics: ['accuracy'],
+    // });
+    // debugger;
+    // model.predict(tf.tensor2d([2,1],[2,1]));
+    // console.log(model);
+    // kernel:
+    //model.layers[2].getWeights()[0].print()
+
+// bias:
+    //console.log('-----------')
+    //model.layers[2].getWeights()[1].print()
     return model;
   }
 
-  public think() {
-
+  public async decide(input) {
+    //console.log('input: ', input);
+    return this.tensorflow.tidy(() => {
+      return this.mind.predict(this.tensorflow.tensor([input]));
+    });
   }
 }

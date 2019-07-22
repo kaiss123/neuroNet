@@ -1,33 +1,35 @@
-import {BOARD_SIZE, CONTROLS} from "./constants";
+import {BOARD_SIZE, CONTROLS, CONTROLSAI} from "./constants";
 import {Fruit} from "./fruit";
 import {NeuroNet} from "./neuroNet";
 
-export class Snake extends NeuroNet{
+export class Snake extends NeuroNet {
 
-  private interval: number = 150;
+  private interval: number = 10;
   private timer;
-  public score = 0;;
+  public score = 0;
   public lifeTime = 0;
   public lifeLeft = 200;
   public fitness = 0;
   public vision;
+  public netResult;
 
-  direction = CONTROLS.LEFT;
+  direction = CONTROLSAI.LEFT;
   parts = [];
   public board = [];
   public fruit;
-  public tempDirection: number = CONTROLS.LEFT;
+  public tempDirection: number = CONTROLSAI.LEFT;
 
   public replay;
 
-  constructor(n = 0) {
-    super();
+  constructor(public id, interval, mind=undefined) {
+    super(mind);
+    this.interval = interval;
     this.setBoard();
     this.start();
   }
 
   start() {
-    for (let i = 0; i < 3; i++) {
+    for (let i = 0; i < 7; i++) {
       this.parts.push({x: 8 + i, y: 8});
     }
     this.fruit.resetFruit();
@@ -56,7 +58,9 @@ export class Snake extends NeuroNet{
   }
 
   selfCollision(part: any): boolean {
-    return this.board[part.y][part.x] === true;
+    if (part.x < BOARD_SIZE - 1 && part.y < BOARD_SIZE) {
+      return this.board[part.y][part.x] === true;
+    }
   }
 
   boardCollision(part: any): boolean {
@@ -64,15 +68,21 @@ export class Snake extends NeuroNet{
   }
 
   updatePositions(): void {
+    this.look();
+    this.think();
     let newHead = this.repositionHead();
     let me = this;
 
     if (this.boardCollision(newHead)) {
-      return this.dead();
+      this.dead();
+      this.isDeadResolver(true);
+      return;
     }
 
     if (this.selfCollision(newHead)) {
-      return this.dead();
+      this.dead();
+      this.isDeadResolver(true);
+      return;
     } else if (this.fruit.fruitCollision(newHead)) {
       this.eatFruit();
     }
@@ -87,9 +97,7 @@ export class Snake extends NeuroNet{
     this.lifeLeft--;
 
     this.direction = this.tempDirection;
-    if(this.replay) {
-     // this.replaySub.next()
-    }
+
     this.timer = setTimeout(() => {
       me.updatePositions();
     }, this.interval);
@@ -97,57 +105,93 @@ export class Snake extends NeuroNet{
 
   repositionHead(): any {
     let newHead = Object.assign({}, this.parts[0]);
-
-    if (this.tempDirection === CONTROLS.LEFT) {
+    if (this.tempDirection === CONTROLSAI.LEFT) {
       newHead.x -= 1;
-    } else if (this.tempDirection === CONTROLS.RIGHT) {
+    } else if (this.tempDirection === CONTROLSAI.RIGHT) {
       newHead.x += 1;
-    } else if (this.tempDirection === CONTROLS.UP) {
+    } else if (this.tempDirection === CONTROLSAI.UP) {
       newHead.y -= 1;
-    } else if (this.tempDirection === CONTROLS.DOWN) {
+    } else if (this.tempDirection === CONTROLSAI.DOWN) {
       newHead.y += 1;
     }
 
     return newHead;
   }
 
+  isDeadResolver;
+  public isDead;
+
+  getStatus() {
+    return new Promise<boolean>(resolve => {
+      return this.isDeadResolver = resolve;
+    });
+  }
+
   dead() {
     clearTimeout(this.timer);
-    console.log('dead');
+    this.calculateFitness();
   }
 
   calculateFitness() {
-    if(this.score < 10) {
+    if (this.score < 10) {
       this.fitness = Math.floor(this.lifeTime * this.lifeTime) * Math.pow(2, this.score);
     } else {
       this.fitness = Math.floor(this.lifeTime * this.lifeTime);
-      this.fitness *= Math.pow(2,10);
-      this.fitness *= (this.score-9);
+      this.fitness *= Math.pow(2, 10);
+      this.fitness *= (this.score - 9);
     }
   }
 
   look() {
-    this.vision = [];
-    var tmp = this.lookInDirection({x: -BOARD_SIZE, y: 0});
-    tmp = this.lookInDirection({x: -BOARD_SIZE, y: -BOARD_SIZE});
-    tmp = this.lookInDirection({x: 0, y: -BOARD_SIZE});
-    tmp = this.lookInDirection({x: BOARD_SIZE, y: -BOARD_SIZE});
-    tmp = this.lookInDirection({x: BOARD_SIZE, y: 0});
-    tmp = this.lookInDirection({x: BOARD_SIZE, y: BOARD_SIZE});
-    tmp = this.lookInDirection({x: 0, y: BOARD_SIZE});
-    tmp = this.lookInDirection({x: -BOARD_SIZE, y: BOARD_SIZE});
+
+    this.vision = [...this.lookInDirection({x: -1, y: 0}),
+      ...this.lookInDirection({x: -1, y: -1}),
+      ...this.lookInDirection({x: 0, y: -1}),
+      ...this.lookInDirection({x: 1, y: -1}),
+      ...this.lookInDirection({x: 1, y: 0}),
+      ...this.lookInDirection({x: 1, y: 1}),
+      ...this.lookInDirection({x: 0, y: 1}),
+      ...this.lookInDirection({x: -1, y: 1}),
+    ];
   }
 
   lookInDirection(directionVector) {
-    var head = this.parts[0];
-
+    var head = {...this.parts[0]};
+    var look = new Array(3).fill(0);
+    var distance = 0;
     var foodCollision: boolean = false;
     var bodyCollision: boolean = false;
-    var wallCollision: boolean = false;
     var pos = head;
 
-    while(this.boardCollision(head)) {
+    pos.x += directionVector.x;
+    pos.y += directionVector.y;
+    distance += 1;
 
+    while (!this.boardCollision(pos)) {
+      if (!foodCollision && this.fruit.fruitCollision(pos)) {
+        foodCollision = true;
+        look[0] = 1;
+      }
+      if (!bodyCollision && this.selfCollision(pos)) {
+        bodyCollision = true;
+        look[1] = 1;
+      }
+
+      pos.x += directionVector.x;
+      pos.y += directionVector.y;
+      distance += 1;
+
+      look[2] = 1 / distance;
     }
+    return look;
   }
+
+  async think() {
+    var output = await this.decide(this.vision);
+    this.netResult = output.dataSync();
+    const indexOfMaxValue = this.netResult.indexOf(Math.max(...this.netResult));
+    this.tempDirection = indexOfMaxValue;
+    //console.log('output: ', result, indexOfMaxValue);
+  }
+
 }
