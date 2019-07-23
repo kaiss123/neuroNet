@@ -23,12 +23,12 @@ export class SnakeComponent {
   public gameStarted = false;
   public newBestScore = false;
   public snake: Snake; // snake for replay
-  private interval: number = 50;
+  private interval: number = 0;
 
   public popuplation: Population;
 
   constructor() {
-    this.popuplation = new Population(2, this.interval);
+    this.popuplation = new Population(20, this.interval);
     this.start();
   }
 

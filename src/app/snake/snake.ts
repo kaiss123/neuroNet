@@ -1,17 +1,19 @@
-import {BOARD_SIZE, CONTROLS, CONTROLSAI} from "./constants";
+import {BOARD_SIZE, CONTROLSAI} from "./constants";
 import {Fruit} from "./fruit";
 import {NeuroNet} from "./neuroNet";
 
 export class Snake extends NeuroNet {
 
-  private interval: number = 10;
+  private interval: number = 50;
   private timer;
   public score = 0;
   public lifeTime = 0;
   public lifeLeft = 200;
-  public fitness = 0;
+  public fitness = 1;
   public vision;
   public netResult;
+  public isdeadNow: boolean = false;
+  public parentsFitness = -1;
 
   direction = CONTROLSAI.LEFT;
   parts = [];
@@ -21,15 +23,16 @@ export class Snake extends NeuroNet {
 
   public replay;
 
-  constructor(public id, interval, mind=undefined) {
+  constructor(public id, interval, mind=undefined, parentsFitness=-1) {
     super(mind);
     this.interval = interval;
+    this.parentsFitness = parentsFitness;
     this.setBoard();
-    this.start();
+   // this.start();
   }
 
   start() {
-    for (let i = 0; i < 7; i++) {
+    for (let i = 0; i < 3; i++) {
       this.parts.push({x: 8 + i, y: 8});
     }
     this.fruit.resetFruit();
@@ -128,6 +131,7 @@ export class Snake extends NeuroNet {
   }
 
   dead() {
+    this.isdeadNow = true;
     clearTimeout(this.timer);
     this.calculateFitness();
   }
@@ -194,4 +198,7 @@ export class Snake extends NeuroNet {
     //console.log('output: ', result, indexOfMaxValue);
   }
 
+ clone() {
+  return new Snake(-1, this.interval, this.mind)
+ }
 }

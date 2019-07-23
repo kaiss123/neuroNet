@@ -1,5 +1,5 @@
-export const BOARD_SIZE = 24;
-
+export const BOARD_SIZE = 25;
+export const LAYERSIZE = 24;
 export const CONTROLS = {
   LEFT: 37,
   UP: 38,

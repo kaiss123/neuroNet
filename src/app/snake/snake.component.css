@@ -37,7 +37,6 @@
 }
 
 .game-container {
-  width: 50%;
   position: relative;
   display: block;
   margin: auto;
@@ -47,13 +46,13 @@
 }
 
 .row {
-  height: 26px;
+  height: 14px;
 }
 
 .column {
   border: 1px solid rgba(97, 131, 138, .1);
-  width: 24px;
-  height: 24px;
+  width: 12px;
+  height: 12px;
   display: inline-block;
 }
 
