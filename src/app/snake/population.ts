@@ -4,6 +4,7 @@ import * as tfvis from '@tensorflow/tfjs-vis';
 import {NeuroNet} from "./neuroNet";
 import {AbstractPopupation} from "./abstractPopupation";
 import {WorkerService} from "./worker/worker.service";
+import {first} from "rxjs/operators";
 
 export class Population  extends AbstractPopupation{
 
@@ -19,9 +20,11 @@ export class Population  extends AbstractPopupation{
   generation: number = 0;
   fitnessSum: number = 0;
   stop = false;
-  size = 2000;
+  size = 20;
   snakeId = 1;
   interval = 10;
+  chartData = [];
+  chartDataFitness = [];
 
   constructor(private worker: WorkerService) {
     super();
@@ -30,18 +33,19 @@ export class Population  extends AbstractPopupation{
 
   async start(fristRound: boolean = true) {
     this.generation++;
-    // if(fristRound) {
+    if(fristRound) {
       this.snakes = [];
       for(let i = 1; i <= this.size; i++) {
         this.snakes.push(new Snake(this.snakeId++, this.interval));
       }
       this.snakeBest = this.snakes[0];
-    // } else {
-    //   let tmpSnakes = this.naturalSelection();
-    //   this.snakes = [];
-    //   this.snakes = tmpSnakes;
-    //   this.snakeBest = this.snakes[0];
-    // }
+    } else {
+      // let tmpSnakes = this.naturalSelection();
+      let tmpSnakes = await this.worker.startWorker(this.snakes).pipe(first()).toPromise();
+      this.snakes = [];
+      this.snakes = tmpSnakes;
+      this.snakeBest = this.snakes[0];
+    }
     this.snakeBest.replay = true;
    this.snakes.map((s)=> s.start());
 
@@ -275,7 +279,6 @@ export class Population  extends AbstractPopupation{
     return this.fitnessSum;
   }
 
-  chartData = [];
   showCharts() {
     this.showChartFitness();
     let values = this.chartData.map(d => ({
@@ -293,7 +296,6 @@ export class Population  extends AbstractPopupation{
       }
     );
   }
-  chartDataFitness = [];
   showChartFitness() {
     let values = this.chartDataFitness.map(d => ({
       x: d.x,

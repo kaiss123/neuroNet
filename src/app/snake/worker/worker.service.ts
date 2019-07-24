@@ -1,4 +1,6 @@
 import {Injectable} from '@angular/core';
+import {Observable, of} from "rxjs";
+import {fromWorker} from "observable-webworker";
 
 //https://github.com/nolanlawson/promise-worker
 @Injectable({
@@ -9,29 +11,17 @@ export class WorkerService {
   worker;
 
   constructor() {
-    this.init();
   }
 
-  init(): void {
-    if (typeof Worker !== 'undefined') {
-      const worker = new Worker('./web-worker//worker.worker', { type: 'module' });
-      worker.onmessage = ({ data }) => {
-        console.log(`page got message: ${data}`);
-      };
-      worker.postMessage('hello');
-      // worker.onmessage = ({data}) => this.onMessage(data);
-    } else {
-     console.error('no Web Worker Tecmologi installed at your shitty computer o_O')
-    }
+  startWorker(data): Observable<any> {
+    const input$: Observable<string> = of(data);
+
+    return fromWorker<string, string>(() =>
+      new Worker('./web-worker//naturalSelection.worker', { type: 'module'}), input$)
+      // .subscribe(message => {
+      //   console.log(`Got message`, message);
+      //   cb(message);
+      // });
   }
 
-  onMessage(data) {
-    console.log(`page got message: ${data}`);
-    this.doFencyStuff();
-  }
-
-  doFencyStuff() {
-
-   // worker.postMessage('hello');
-  }
 }
