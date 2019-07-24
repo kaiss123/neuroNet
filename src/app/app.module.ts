@@ -4,6 +4,7 @@ import { NgModule } from '@angular/core';
 import { AppComponent } from './app.component';
 import { NeuroSnakeComponent } from './neuro-snake/neuro-snake.component';
 import { SnakeComponent } from './snake/snake.component';
+import {WorkerService} from "./snake/worker/worker.service";
 
 @NgModule({
   declarations: [
@@ -14,7 +15,7 @@ import { SnakeComponent } from './snake/snake.component';
   imports: [
     BrowserModule
   ],
-  providers: [],
+  providers: [WorkerService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

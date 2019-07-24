@@ -52,12 +52,15 @@ export class NeuroNet {
   public initBrain() {
     const model = this.tensorflow.sequential();
     model.add(this.tensorflow.layers.dense({inputShape: [24], units: 1}));
-    model.add(this.tensorflow.layers.dense({units: 24, activation: 'sigmoid',
+    model.add(this.tensorflow.layers.dense({units: 24, activation: 'relu',
       useBias: true,
       biasInitializer: 'randomNormal'}));
     model.add(this.tensorflow.layers.dense({units: 24, activation: 'sigmoid',
       useBias: true,
       biasInitializer: 'randomNormal'}));
+    // model.add(this.tensorflow.layers.dense({units: 24, activation: 'sigmoid',
+    //   useBias: true,
+    //   biasInitializer: 'randomNormal'}));
     model.add(this.tensorflow.layers.dense({units: 4}));
 
     // const optimizer = tf.train.adam();
@@ -71,7 +74,7 @@ export class NeuroNet {
     // console.log(model);
     // kernel:
     //model.layers[2].getWeights()[0].print()
-
+Worker
 // bias:
     //console.log('-----------')
     //model.layers[2].getWeights()[1].print()

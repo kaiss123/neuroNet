@@ -18,6 +18,8 @@
     "@angular/forms": "~8.1.0",
     "@angular/platform-browser": "~8.1.0",
     "@angular/platform-browser-dynamic": "~8.1.0",
+    "@angular/platform-webworker": "^8.1.2",
+    "@angular/platform-webworker-dynamic": "^8.1.2",
     "@angular/router": "~8.1.0",
     "@tensorflow/tfjs": "^1.2.2",
     "@tensorflow/tfjs-core": "^1.2.2",

@@ -71,8 +71,8 @@ export class Snake extends NeuroNet {
   }
 
   updatePositions(): void {
-    this.look();
-    this.think();
+    // this.look();
+    // this.think();
     let newHead = this.repositionHead();
     let me = this;
 

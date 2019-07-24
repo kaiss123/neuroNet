@@ -1,12 +1,12 @@
 import { TestBed } from '@angular/core/testing';
 
-import { TflowService } from './tflow.service';
+import { WorkerService } from './worker.service';
 
-describe('TflowService', () => {
+describe('WorkerService', () => {
   beforeEach(() => TestBed.configureTestingModule({}));
 
   it('should be created', () => {
-    const service: TflowService = TestBed.get(TflowService);
+    const service: WorkerService = TestBed.get(WorkerService);
     expect(service).toBeTruthy();
   });
 });

@@ -2,12 +2,11 @@ import {Snake} from "./snake";
 import * as tf from '@tensorflow/tfjs';
 import * as tfvis from '@tensorflow/tfjs-vis';
 import {NeuroNet} from "./neuroNet";
-import {first} from "rxjs/operators";
-import {clone} from "@tensorflow/tfjs";
+import {AbstractPopupation} from "./abstractPopupation";
+import {WorkerService} from "./worker/worker.service";
 
-export class Population {
+export class Population  extends AbstractPopupation{
 
-  private tensorflow = tf;
   private tensorflowVis = tfvis;
 
   snakes: Snake[] = [];
@@ -20,29 +19,29 @@ export class Population {
   generation: number = 0;
   fitnessSum: number = 0;
   stop = false;
-  size = 0;
+  size = 2000;
   snakeId = 1;
   interval = 10;
-  constructor(size: number = 2, interval) {
-    this.size = size;
-    this.interval = interval;
+
+  constructor(private worker: WorkerService) {
+    super();
   }
 
 
   async start(fristRound: boolean = true) {
     this.generation++;
-    if(fristRound) {
+    // if(fristRound) {
       this.snakes = [];
       for(let i = 1; i <= this.size; i++) {
         this.snakes.push(new Snake(this.snakeId++, this.interval));
       }
       this.snakeBest = this.snakes[0];
-    } else {
-      let tmpSnakes = this.naturalSelection();
-      this.snakes = [];
-      this.snakes = tmpSnakes;
-      this.snakeBest = this.snakes[0];
-    }
+    // } else {
+    //   let tmpSnakes = this.naturalSelection();
+    //   this.snakes = [];
+    //   this.snakes = tmpSnakes;
+    //   this.snakeBest = this.snakes[0];
+    // }
     this.snakeBest.replay = true;
    this.snakes.map((s)=> s.start());
 
@@ -106,7 +105,7 @@ export class Population {
     //   }
     // }
     while(tmpsnakes.length < this.size) {
-      tmpsnakes.push(this.crossover(this.selectParent(), this.selectParent()));
+      tmpsnakes.push(this.crossover(this.selectParent(), new Snake(this.snakeId++, this.interval)));
     }
     // for(let i = 0; i < this.snakes.length-1; i++) {
     //   tmpsnakes.push(this.crossover(this.snakes[i], new Snake(this.snakeId++, this.interval)));

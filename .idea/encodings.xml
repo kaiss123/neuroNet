@@ -1,10 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="Encoding" addBOMForNewFiles="with NO BOM">
+    <file url="file://$PROJECT_DIR$/src/app/app.module.ts" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/app/snake/abstractPopupation.ts" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/app/snake/background-tasks/components/ui-task/ui-task.component.ts" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/app/snake/background-tasks/workers/background-worker.ts" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/src/app/snake/fruit.ts" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/src/app/snake/neuroNet.ts" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/src/app/snake/population.ts" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/app/snake/snake.component.ts" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/src/app/snake/snake.ts" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/app/snake/worker/JobManager.ts" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/app/snake/worker/WorkerActionListener.ts" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/app/snake/worker/background-task.model.ts" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/app/snake/worker/models.ts" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/app/snake/worker/worker.service.ts" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/app/snake/worker/worker.ts" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/src/app/tensorflow.service.ts" charset="UTF-8" />
   </component>
 </project>

@@ -1,8 +1,8 @@
-import {Component, OnInit} from '@angular/core';
-import {BOARD_SIZE, COLORS, CONTROLS, GAME_MODES} from "./constants";
+import {Component} from '@angular/core';
+import {BOARD_SIZE, COLORS, GAME_MODES} from "./constants";
 import {Snake} from "./snake";
 import {Population} from "./population";
-import {interval} from "rxjs";
+import {WorkerService} from "./worker/worker.service";
 
 @Component({
   selector: 'app-snake',
@@ -23,12 +23,11 @@ export class SnakeComponent {
   public gameStarted = false;
   public newBestScore = false;
   public snake: Snake; // snake for replay
-  private interval: number = 0;
 
   public popuplation: Population;
 
-  constructor() {
-    this.popuplation = new Population(20, this.interval);
+  constructor(public workerService: WorkerService) {
+    this.popuplation = new Population(workerService);
     this.start();
   }
 
